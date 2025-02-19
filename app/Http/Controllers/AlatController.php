@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Data_alat;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AlatController extends Controller
 {
@@ -12,8 +13,8 @@ class AlatController extends Controller
     public function index()
     {
         $alat = Data_alat::all(); // Retrieve all alat from the database
-        $satuan = Satuan::all();
-        return view('alat.index', compact('satuan','alat'));
+       
+        return view('alat.index', compact('alat'));
     }
 
     // Show the form for creating a new alat
@@ -21,40 +22,39 @@ class AlatController extends Controller
     {
        
         $alat = Data_alat::all(); // Retrieve all alat from the database
-        $satuan = Satuan::all();
-        return view('alat.create', compact( 'satuan','alat'));
+       
+        return view('alat.create', compact('alat'));
     }
 
     // Store a newly created alat in storage
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         // Validasi request
         $validated = $request->validate([
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Pastikan format gambar benar
             'nama_alat' => 'required|string|max:255',
             'stok' => 'required|integer', // Disarankan stok menjadi integer, bukan string
-            'kode_satuan' => 'required|exists:satuans,kode_satuan',
+           
             'keterangan' => 'required|string|max:255',
         ]);
-    
+        if ($request->hasFile('gambar')){
+            $photoPath= $request->file('gambar')->store('gambar','public');
+           } else {
+            $photoPath = null;
+           }
         // Generate kode alat baru
         $lastNumber = Data_alat::count() + 1;
         $kodeAlat = 'ALT' . str_pad($lastNumber, 3, '0', STR_PAD_LEFT);
-    
-        // Simpan gambar ke storage
-        if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('alat', 'public'); // Simpan ke storage
-            $validated['gambar'] = $path; // Masukkan path ke array validated untuk disimpan ke database
-        }
-    
+
+  
         // Simpan data ke database
         Data_alat::create([
             'kode_alat' => $kodeAlat,
-            'gambar' => $validated['gambar'],
+            'gambar' => $photoPath,
             'nama_alat' => $validated['nama_alat'],
             'stok' => $validated['stok'],
-            'kode_satuan' => $validated['kode_satuan'],
+            
             'keterangan' => $validated['keterangan'],
         ]);
     
@@ -65,28 +65,47 @@ class AlatController extends Controller
     
 
     // Show the form for editing the specified alat
-    public function edit(Data_alat $alat)
+    public function edit($id_alat)
     {
-        return view('admin.alat.edit', compact('alat'));
+        $alat = Data_alat::findOrFail($id_alat);
+    // Ambil semua satuan
+
+        return view('alat.update', compact('alat', ));
     }
 
-    // Update the specified alat in storage
-    public function update(Request $request, Data_alat $alat)
+    // Proses update alat
+    public function update(Request $request, $id_alat)
     {
+        // Validasi input
         $validated = $request->validate([
-            'kode_alat' => 'required|string|max:255',
-            'gambar' => 'required|string|max:255',
             'nama_alat' => 'required|string|max:255',
-            'stok' => 'required|string|max:255',
-            'kode_satuan' => 'required|string|max:255',
-            'keterangan' => 'required|string|max:255',
+            'stok' => 'required|integer',
+            'kode_satuan' => 'required|exists:satuans,kode_satuan',
+           
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        $alat->update($validated); // Update the alat data in the database
-
-        return redirect()->route('alat.index')->with('success', 'Alat updated successfully.');
+    
+        // Ambil data alat dari database
+        $alat = Data_alat::findOrFail($id_alat);
+    
+        // Jika ada gambar baru yang diupload
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($alat->gambar) {
+                Storage::disk('public')->delete($alat->gambar);
+            }
+    
+            // Simpan gambar baru ke storage
+            $photoPath = $request->file('gambar')->store('gambar', 'public');
+            $validated['gambar'] = $photoPath; // Pastikan gambar baru disimpan
+        }
+    
+        // Update data alat dengan data baru
+        $alat->update($validated);
+    
+        return redirect()->route('alat.index')->with('success', 'Alat berhasil diperbarui.');
     }
-
+    
     // Remove the specified alat from storage
     public function destroy(Data_alat $alat)
     {

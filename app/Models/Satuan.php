@@ -21,7 +21,4 @@ class Satuan extends Model
     public function Sparepart(): HasMany{
         return $this->hasMany(Sparepart::class, 'kode_satuan', 'kode_satuan');
     }
-    public function data_alat(): HasMany{
-        return $this->hasMany(Data_alat::class, 'kode_satuan', 'kode_satuan');
-    }
 }

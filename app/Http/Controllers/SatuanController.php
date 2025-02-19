@@ -2,92 +2,84 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\satuan;
+
+use App\Models\Satuan;
 use Illuminate\Http\Request;
 
-class satuanController extends Controller
+class SatuanController extends Controller
 {
-    public function index(){
-        $satuan = satuan::get();
-        return view('satuan.index', compact('satuan'));
-       }
-       public function create(){
-        $satuan = satuan::all();
-       
-        return view('satuan.create',[
-            'satuan' => $satuan,
-            
-        ]);
-        
-    }
-    public function store(Request $request)
-{
-    // Validasi data yang dikirimkan oleh form
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'keterangan' => 'nullable|string|max:255',
-    ]);
-
-    // Hitung jumlah data di tabel satuan untuk menentukan nomor berikutnya
-    $lastNumber = satuan::count('id_satuan') + 1;
-
-    // Format kode satuan (misalnya: KAT001, KAT002, dst.)
-    $kodesatuan = 'SAT' . str_pad($lastNumber, 3, '0', STR_PAD_LEFT);
-
-    // Simpan data ke tabel satuan
-    satuan::create([
-        'kode_satuan' => $kodesatuan,
-        'nama' => $request->nama,
-        'keterangan' => $request->keterangan,
-    ]);
-
-    // Redirect ke halaman satuan dengan pesan sukses
-    return redirect()->route('satuan.index')->with('success', 'satuan berhasil ditambahkan!');
-}
-public function edit($id)
+    /**
+     * Menampilkan daftar satuan dengan pagination
+     */
+    public function index()
     {
-        $satuan = satuan::findOrFail($id);
-        return view('satuan.update', compact('satuan'));
+        $satuan = Satuan::paginate(10); // Menggunakan pagination agar lebih efisien
+        return view('satuan.index', compact('satuan'));
     }
 
-    // Menyimpan perubahan satuan (update)
+    /**
+     * Menyimpan satuan baru ke dalam database
+     */
+    public function store(Request $request)
+    {
+        Satuan::create([
+            'kode_satuan' => $request->kode_satuan,
+            'nama' => $request->nama, // Pastikan sesuai dengan database
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('satuan.index')->with('message', 'Data berhasil ditambahkan!');
+    }
+
+    /**
+     * Mengambil data satuan untuk edit berdasarkan ID
+     */
+    public function edit($id)
+    {
+        $satuan = Satuan::findOrFail($id);
+        return response()->json($satuan);
+    }
+
+    /**
+     * Memperbarui data satuan berdasarkan ID
+     */
     public function update(Request $request, $id)
     {
-        // Validasi input
-        $request->validate([
-            'kode_satuan' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
+        $satuan = Satuan::findOrFail($id);
 
-        // Ambil data satuan berdasarkan ID
-        $satuan = satuan::findOrFail($id);
-
-        // Update data satuan
         $satuan->update([
             'kode_satuan' => $request->kode_satuan,
             'nama' => $request->nama,
             'keterangan' => $request->keterangan,
         ]);
 
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('satuan.index')->with('success', 'satuan berhasil diperbarui!');
+        return redirect()->route('satuan.index')->with('message', 'Data berhasil diperbarui!');
     }
 
-    // Menghapus satuan
+    /**
+     * Menghapus data satuan berdasarkan ID
+     */
     public function destroy($id)
     {
-        // Ambil data satuan berdasarkan ID
-        $satuan = satuan::findOrFail($id);
-
-        // Hapus satuan
-        $satuan->delete();
-
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('satuan.index')->with('success', 'satuan berhasil dihapus!');
+        Satuan::findOrFail($id)->delete();
+        return redirect()->route('satuan.index')->with('message', 'Data berhasil dihapus!');
     }
-    public function show(Request $request){
-        $satuan = satuan::get();      
-        return view('satuan.invoice',compact('satuan'));
-       }
+
+    /**
+     * Mengambil satuan berdasarkan ID untuk API atau kebutuhan lain
+     */
+    public function getSatuan($id)
+    {
+        $satuan = Satuan::findOrFail($id);
+        return response()->json($satuan);
+    }
+
+    /**
+     * Menampilkan daftar satuan dalam bentuk invoice
+     */
+    public function invoice()
+    {
+        $satuan = Satuan::paginate(10);
+        return view('satuan.invoice', compact('satuan'));
+    }
 }

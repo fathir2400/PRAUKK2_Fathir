@@ -46,7 +46,7 @@
 
                 <div class="box-body !-mt-4">
                     <!-- Form for adding new Alat -->
-                    <form action="{{ route('alat.store') }}" method="POST">
+                    <form action="{{ route('alat.store') }}" method="POST"enctype="multipart/form-data">
                         @csrf
                         
                         <!-- Input for Kode Alat -->
@@ -69,15 +69,7 @@
                         </div>
 
                         <!-- Dropdown for selecting Satuan -->
-                        <div class="xl:col-span-12 col-span-12 mt-0">
-                            <label for="kode_satuan" class="form-label">Satuan</label>
-                            <select id="kode_satuan" name="kode_satuan" class="form-control" required>
-                                <option value="" disabled selected>Pilih Satuan</option>
-                                @foreach($satuan as $item)
-                                    <option value="{{ $item->kode_satuan }}">{{ $item->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                      
 
                         <!-- Input for Keterangan -->
                         <div class="xl:col-span-12 col-span-12 mt-0">

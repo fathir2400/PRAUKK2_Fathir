@@ -71,9 +71,14 @@ Route::resource('/sparepart',SparepartController::class);
 Route::get('/sparepart/invoice',[SparepartController::class,'show'])->name('sparepart.invoice');
 
 Route::resource('/kategori',KategoriController::class);
+
 Route::get('/kategori/invoice',[KategoriController::class,'show'])->name('kategori.invoice');
 
 Route::resource('/satuan',satuanController::class);
+Route::get('/satuan/{id_satuan}/edit', [SatuanController::class, 'getSatuan']);
+Route::get('/satuan/{id_satuan}/edit', [SatuanController::class, 'edit']);
+
+
 Route::get('/satuan/invoice',[satuanController::class,'show'])->name('satuan.invoice');
 
 Route::resource('/merk',MerkController::class);

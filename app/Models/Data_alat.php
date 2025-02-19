@@ -15,13 +15,9 @@ class Data_alat extends Model
         'gambar',
         'nama_alat',
         'stok',
-        'kode_satuan',
         'keterangan',
 
         
     ];
-    public function satuan()
-    {
-        return $this->belongsTo(Satuan::class, 'kode_satuan', 'kode_satuan');
-    }
+   
 }

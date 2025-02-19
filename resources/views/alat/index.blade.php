@@ -67,7 +67,7 @@
                             <th scope="col" class="text-start">Gambar</th>
                             <th scope="col" class="text-start">Nama Alat</th>
                             <th scope="col" class="text-start">Stok</th>
-                            <th scope="col" class="text-start">Kode Satuan</th>
+                            
                             <th scope="col" class="text-start">Keterangan</th>
                             <th scope="col" class="text-start">Action</th>
                         </tr>
@@ -78,11 +78,11 @@
                                             <td>{{ $key + 1 }}</td>
                             <td>{{ $item->kode_alat }}</td>
                             <td>
-                                            <img src="{{asset('storage/gambar/'. $item->gambar) }}" width="50" height="50" alt="Foto_profile">
+                                            <img src="{{asset('storage/'. $item->gambar) }}" width="50" height="50" alt="Foto_profile">
                                             </td>
                             <td>{{ $item->nama_alat }}</td>
                             <td>{{ $item->stok }}</td>
-                            <td>{{ $item->kode_satuan }}</td>
+                            
                             <td>{{ $item->keterangan }}</td>
                                           
                                                 <td>
