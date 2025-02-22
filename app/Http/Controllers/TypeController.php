@@ -10,51 +10,35 @@ use Illuminate\Http\Request;
 class TypeController extends Controller
 {
     public function index()
-    {
-        // Mengambil semua sparepart dengan relasi ke kategori dan satuan
-        $type = Type::with(['jenis', 'merk'])->get();
-        return view('type.index', [
-            'type' => $type
-        ]);
-    }
-    public function create()
-    {
-        $type = Type::all();
-        $jenis = Jenis::all();
-        $merk = Merk::all();
-       
-      
-        return view('type.create', [
-            'type' => $type,
-            'jenis' => $jenis,
-            'merk' => $merk,
-            
-        ]);
-    }
+{
+    // Sebelumnya menggunakan get()
+    // $type = Type::all();
+
+    // Perbaiki dengan paginate()
+    $type = Type::with(['jenis', 'merk'])->paginate(10); // 10 data per halaman
+
+    $jenis = Jenis::all();
+    $merk = Merk::all();
+
+    return view('type.index', compact('type', 'jenis', 'merk'));
+}
+
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
             'kode_jenis' => 'required|exists:jenis,kode_jenis',
             'kode_merk' => 'required|exists:merks,kode_merk',
-            'nama_type' => 'required|string',
-            'tahun' => 'required|integer',
+            'nama_type' => 'required|string|max:255',
+            'tahun' => 'required|integer|min:1900|max:' . date('Y'),
         ]);
-
+    
         Type::create($validated);
-
+    
         return redirect()->route('type.index')->with('success', 'Type berhasil ditambahkan!');
     }
-    public function edit($id)
-    {
-        // Ambil data type berdasarkan ID
-        $type = Type::findOrFail($id);
-        
-        // Ambil data jenis dan merk untuk dropdown
-        $jenis = Jenis::all();
-        $merk = Merk::all();
     
-        return view('type.update', compact('type', 'jenis', 'merk'));
-    }
+   
     
     // Update Function (Memperbarui Data Type)
     public function update(Request $request, $id)
@@ -62,15 +46,17 @@ class TypeController extends Controller
         $validated = $request->validate([
             'kode_jenis' => 'required|exists:jenis,kode_jenis',
             'kode_merk' => 'required|exists:merks,kode_merk',
-            'nama_type' => 'required|string',
-            'tahun' => 'required|integer',
+            'nama_type' => 'required|string|max:255',
+            'tahun' => 'required|integer|min:1900|max:' . date('Y'),
         ]);
-
+    
         $type = Type::findOrFail($id);
         $type->update($validated);
-
+    
         return redirect()->route('type.index')->with('success', 'Type berhasil diperbarui!');
     }
+    
+    
     public function destroy($id)
     {
         // Mencari type berdasarkan ID
@@ -83,5 +69,11 @@ class TypeController extends Controller
         return redirect()->route('type.index')
         ->with('success', 'type berhasil dihapus!');
     }
+    public function show()
+    {
+        $type = Type::paginate(10);
+        return view('type.invoice', compact('type'));
+    }
+    
 
 }

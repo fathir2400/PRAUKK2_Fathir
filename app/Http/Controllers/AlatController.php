@@ -12,10 +12,12 @@ class AlatController extends Controller
     // Display a listing of the alat
     public function index()
     {
-        $alat = Data_alat::all(); // Retrieve all alat from the database
-       
+        // Menggunakan paginate agar bisa memanfaatkan metode links()
+        $alat = Data_alat::paginate(10); // 10 item per halaman
+    
         return view('alat.index', compact('alat'));
     }
+    
 
     // Show the form for creating a new alat
     public function create()
@@ -80,7 +82,7 @@ class AlatController extends Controller
         $validated = $request->validate([
             'nama_alat' => 'required|string|max:255',
             'stok' => 'required|integer',
-            'kode_satuan' => 'required|exists:satuans,kode_satuan',
+            'keterangan' => 'nullable|string',
            
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -90,15 +92,19 @@ class AlatController extends Controller
     
         // Jika ada gambar baru yang diupload
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($alat->gambar) {
-                Storage::disk('public')->delete($alat->gambar);
+            // Hapus gambar lama
+            if ($request->gambar_lama) {
+                Storage::disk('public')->delete($request->gambar_lama);
             }
-    
-            // Simpan gambar baru ke storage
+        
+            // Simpan gambar baru
             $photoPath = $request->file('gambar')->store('gambar', 'public');
-            $validated['gambar'] = $photoPath; // Pastikan gambar baru disimpan
+            $validated['gambar'] = $photoPath;
+        } else {
+            // Jika tidak ada gambar baru, gunakan gambar lama
+            $validated['gambar'] = $request->gambar_lama;
         }
+        
     
         // Update data alat dengan data baru
         $alat->update($validated);
@@ -108,9 +114,20 @@ class AlatController extends Controller
     
     // Remove the specified alat from storage
     public function destroy(Data_alat $alat)
-    {
-        $alat->delete(); // Delete the alat from the database
-
-        return redirect()->route('alat.index')->with('success', 'Alat deleted successfully.');
+{
+    // Hapus gambar jika ada
+    if ($alat->gambar) {
+        Storage::disk('public')->delete($alat->gambar);
     }
+
+    // Hapus data alat
+    $alat->delete();
+
+    return redirect()->route('alat.index')->with('success', 'Alat deleted successfully.');
+}
+public function show()
+{
+    $alat = Data_alat::paginate(10);
+    return   view('alat.invoice', compact('alat'));
+}
 }

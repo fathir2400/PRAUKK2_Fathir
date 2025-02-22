@@ -48,12 +48,9 @@
                     <div class="xl:col-span-12 col-span-12">
                         <div class="box custom-box">
                             <div class="box-header flex justify-between">
-                            <a href="{{ url ('sparepart/create') }}" class="ti-btn ti-btn-info-full">
-                                        Tambah
-                                        <i class="fe fe-arrow-right rtl:rotate-180 ms-2 rtl:ms-0 align-middle"></i>
-                                    </a>
+                            
                                    
-                                    <a href="{{ route ('sparepart.invoice') }}" class="ti-btn ti-btn-secondary-full">
+                                    <a href="{{ route ('bmsparepart.invoice') }}" class="ti-btn ti-btn-secondary-full">
                                         invoice
                                         <i class="fe fe-arrow-right rtl:rotate-180 ms-2 rtl:ms-0 align-middle"></i>
                                     </a>
@@ -91,9 +88,7 @@
                                                 
                                                 <td>
                                                     <div class="hstack flex gap-3 text-[.9375rem]">
-                                                    <a aria-label="anchor" href="{{url('sparepart/'.$item->id.'/edit')}}"
-                                                            class="ti-btn ti-btn-icon ti-btn-sm ti-btn-success-full"><i
-                                                                class="ri-edit-line"></i></a>
+                                                   
                                                                 <form action="{{ url('bmsparepart', $item->id) }}" method="POST">
                                                                   @csrf
                                                                   @method('DELETE')

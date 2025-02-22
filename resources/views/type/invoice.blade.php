@@ -32,20 +32,22 @@ $setting = DB::table('setting')->first();
         <table class="min-w-full border-collapse border border-gray-200 bg-white">
             <thead>
                 <tr class="bg-gray-100 text-left">
-                <th scope="col" class="text-start">No</th>
-                                                <th scope="col" class="text-start">Kode satuan</th>
-                                                <th scope="col" class="text-start">Nama</th>
-                                                <th scope="col" class="text-start">Keterangan</th>
-                                               
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach ($satuan as $key =>$item)
-                                            <tr class="border-b border-defaultborder">
-                                            <td>{{ $key + 1}}</td>
-                                            <td>{{ $item->kode_satuan }}</td>
-                                            <td>{{ $item->nama }}</td>  
-                                            <td>{{ $item->keterangan }}</td>
+                <th class="text-start px-3 py-2">No</th>
+                                <th class="text-start px-3 py-2">Jenis</th>
+                                <th class="text-start px-3 py-2">Merk</th>
+                                <th class="text-start px-3 py-2">Nama Type</th>
+                                <th class="text-start px-3 py-2">Tahun</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($type as $key => $item)
+                            <tr class="border-b">
+                                <td class="px-3 py-2">{{ $key + 1 }}</td>
+                                <td class="px-3 py-2">{{ $item->jenis->nama_jenis ?? '-' }}</td>
+                                <td class="px-3 py-2">{{ $item->merk->nama_merk ?? '-' }}</td>
+                                <td class="px-3 py-2">{{ $item->nama_type }}</td>
+                                <td class="px-3 py-2">{{ $item->tahun }}</td>
                 </tr>
                 @endforeach
             </tbody>

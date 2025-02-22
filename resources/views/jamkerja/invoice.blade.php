@@ -33,18 +33,20 @@ $setting = DB::table('setting')->first();
             <thead>
                 <tr class="bg-gray-100 text-left">
                 <th scope="col" class="text-start">No</th>
-                                                <th scope="col" class="text-start">Kode Merk</th>
-                                                <th scope="col" class="text-start">Nama</th>
+                                                <th scope="col" class="text-start">Bagian</th>
+                                                <th scope="col" class="text-start">Jam Mulai</th>
+                                                <th scope="col" class="text-start">Jam Selesai</th>
                                                 
                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($merk as $key =>$item)
+                                        @foreach ($jamkerja as $key =>$item)
                                             <tr class="border-b border-defaultborder">
                                             <td>{{ $key + 1}}</td>
-                                            <td>{{ $item->kode_merk }}</td>
-                                            <td>{{ $item->nama_merk }}</td>  
+                                            <td>{{ $item->bagian }}</td>
+                                            <td>{{ $item->jam_mulai }}</td>
+                                            <td>{{ $item->jam_selesai}}</td>  
                                           
                 </tr>
                 @endforeach

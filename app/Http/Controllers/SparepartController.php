@@ -77,12 +77,7 @@ class SparepartController extends Controller
     }
 
     // Menampilkan sparepart berdasarkan ID
-    public function show($id)
-    {
-        // Menampilkan sparepart berdasarkan ID dengan relasi ke kategori dan satuan
-        $sparepart = Sparepart::with(['kategori', 'satuan'])->findOrFail($id);
-        return response()->json($sparepart);
-    }
+
     public function edit($id)
     {
         // Mengambil data sparepart berdasarkan ID
@@ -146,6 +141,12 @@ if ($existingBms) {
         return redirect()->route('sparepart.index')
         ->with('success', 'Sparepart berhasil dihapus!');
     }
+    public function show()
+    {
+        $sparepart = Sparepart::get();
+        return view('sparepart.invoice', compact('sparepart'));
+    }
+    
 }
 
 

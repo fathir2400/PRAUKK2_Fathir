@@ -77,7 +77,7 @@ class SatuanController extends Controller
     /**
      * Menampilkan daftar satuan dalam bentuk invoice
      */
-    public function invoice()
+    public function show()
     {
         $satuan = Satuan::paginate(10);
         return view('satuan.invoice', compact('satuan'));

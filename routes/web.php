@@ -7,6 +7,7 @@ use App\Http\Controllers\AlatController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BmsparepartController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JamkerjaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\PeminjamanController;
@@ -68,10 +69,11 @@ Route::get('/setting', [SettingControlle::class, 'index'])->name('setting.index'
 Route::post('/setting/{id_setting}', [SettingControlle::class, 'update'])->name('setting.update');
 
 Route::resource('/sparepart',SparepartController::class);
-Route::get('/sparepart/invoice',[SparepartController::class,'show'])->name('sparepart.invoice');
+Route::get('/sparepart/invoice', [SparepartController::class, 'show'])->name('sparepart.invoice');
+
+
 
 Route::resource('/kategori',KategoriController::class);
-
 Route::get('/kategori/invoice',[KategoriController::class,'show'])->name('kategori.invoice');
 
 Route::resource('/satuan',satuanController::class);
@@ -84,8 +86,32 @@ Route::get('/satuan/invoice',[satuanController::class,'show'])->name('satuan.inv
 Route::resource('/merk',MerkController::class);
 Route::get('/merk/invoice',[MerkController::class,'show'])->name('merk.invoice');
 
-Route::resource('/type',TypeController::class);
-Route::get('/type/invoice',[TypeController::class,'show'])->name('type.invoice');
+
+
+Route::get('/jamkerja', [JamKerjaController::class, 'index'])->name('jamkerja.index');
+Route::get('/jamkerja/invoice',[jamkerjaController::class,'show'])->name('jamkerja.invoice');
+Route::post('/jamkerja', [JamKerjaController::class, 'store'])->name('jamkerja.store');
+Route::post('/jamkerja/bulk-store', [JamKerjaController::class, 'bulkStore'])->name('jamkerja.bulkStore');
+Route::get('/jamkerja/{id}/edit', [JamKerjaController::class, 'edit'])->name('jamkerja.edit');
+Route::put('/jamkerja/{id}', [JamKerjaController::class, 'update'])->name('jamkerja.update');
+Route::delete('/jamkerja/{id}', [JamKerjaController::class, 'destroy'])->name('jamkerja.destroy');
+Route::delete('/jamkerja/bulk-delete', [JamKerjaController::class, 'bulkDelete'])->name('jamkerja.bulkDelete');
+
+
+
+
+Route::get('/type', [TypeController::class, 'index'])->name('type.index');
+Route::get('/type/invoice', [TypeController::class, 'show'])->name('type.invoice');
+Route::post('/type', [TypeController::class, 'store'])->name('type.store');
+Route::post('/type/bulk-store', [TypeController::class, 'bulkStore'])->name('type.bulkStore');
+Route::get('/type/{id}/edit', [TypeController::class, 'edit'])->name('type.edit');
+Route::put('/type/{id}', [TypeController::class, 'update'])->name('type.update');
+Route::delete('/type/{id}', [TypeController::class, 'destroy'])->name('type.destroy');
+Route::delete('/type/bulk-delete', [TypeController::class, 'bulkDelete'])->name('type.bulkDelete');
+
+
+Route::resource('/servis',servisController::class);
+Route::get('/servis/invoice',[servisController::class,'show'])->name('servis.invoice');
 
 Route::resource('/alat',AlatController::class);
 Route::get('/alat/invoice',[AlatController::class,'show'])->name('alat.invoice');
@@ -93,6 +119,7 @@ Route::get('/alat/invoice',[AlatController::class,'show'])->name('alat.invoice')
 
 
 Route::resource('/bmsparepart', BmsparepartController::class);
+Route::get('/bmsparepart/invoice',[BmsparepartController::class,'show'])->name('bmsparepart.invoice');
 
 
 

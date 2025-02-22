@@ -26,4 +26,11 @@ class BmsparepartController extends Controller
         return redirect()->route('sparepart.bmindex')
         ->with('success', 'bmparepart berhasil dihapus!');
     }
+    public function show()
+    {
+        $bmsparepart = bmsparepart::get();
+        return view('sparepart.laporan', [
+            'bmsparepart' => $bmsparepart
+        ]);
+    }
 }

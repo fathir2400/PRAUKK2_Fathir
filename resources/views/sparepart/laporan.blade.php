@@ -33,19 +33,30 @@ $setting = DB::table('setting')->first();
             <thead>
                 <tr class="bg-gray-100 text-left">
                 <th scope="col" class="text-start">No</th>
-                                                <th scope="col" class="text-start">Kode Merk</th>
+                                            <th scope="col" class="text-start">Kode Barang Masuk</th>
+                                                <th scope="col" class="text-start">Kode Spare Part</th>
                                                 <th scope="col" class="text-start">Nama</th>
-                                                
-                                               
+                                                <th scope="col" class="text-start">Jumlah Stok</th>
+                                                <th scope="col" class="text-start">Harga</th>
+                                                <th scope="col" class="text-start">Kategori</th>
+                                                <th scope="col" class="text-start">Satuan</th>
+                                                <th scope="col" class="text-start">Keterangan</th>
+                                                <th scope="col" class="text-start">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($merk as $key =>$item)
+                                        @foreach ($bmsparepart as $key =>$item)
                                             <tr class="border-b border-defaultborder">
-                                            <td>{{ $key + 1}}</td>
-                                            <td>{{ $item->kode_merk }}</td>
-                                            <td>{{ $item->nama_merk }}</td>  
-                                          
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $item->kode_bmsparepart }}</td>
+                                            <td>{{ $item->kode_sparepart }}</td>
+                                            <td>{{ $item->nama_sparepart }}</td>
+                                            <td>{{ $item->jumlah_stok }}</td>
+                                            <td>{{ $item->harga }}</td>
+                                            <td>{{ $item->kategori->nama ?? '-' }}</td>
+                                            <td>{{ $item->satuan->nama ?? '-' }}</td>
+                                            <td>{{ $item->keterangan }}</td>
+                                             
                 </tr>
                 @endforeach
             </tbody>

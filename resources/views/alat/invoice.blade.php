@@ -32,20 +32,26 @@ $setting = DB::table('setting')->first();
         <table class="min-w-full border-collapse border border-gray-200 bg-white">
             <thead>
                 <tr class="bg-gray-100 text-left">
-                <th scope="col" class="text-start">No</th>
-                                                <th scope="col" class="text-start">Kode satuan</th>
-                                                <th scope="col" class="text-start">Nama</th>
-                                                <th scope="col" class="text-start">Keterangan</th>
-                                               
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach ($satuan as $key =>$item)
-                                            <tr class="border-b border-defaultborder">
-                                            <td>{{ $key + 1}}</td>
-                                            <td>{{ $item->kode_satuan }}</td>
-                                            <td>{{ $item->nama }}</td>  
-                                            <td>{{ $item->keterangan }}</td>
+                <th class="text-start px-3 py-2">No</th>
+                                <th class="text-start px-3 py-2">Kode Alat</th>
+                                <th class="text-start px-3 py-2">Gambar</th>
+                                <th class="text-start px-3 py-2">Nama Alat</th>
+                                <th class="text-start px-3 py-2">Stok</th>
+                                <th class="text-start px-3 py-2">Keterangan</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($alat as $key => $item)
+                            <tr class="border-b">
+                                <td class="px-3 py-2">{{ $key + 1 }}</td>
+                                <td class="px-3 py-2">{{ $item->kode_alat }}</td>
+                                <td class="px-3 py-2">
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" width="50" height="50" alt="Gambar Alat">
+                                </td>
+                                <td class="px-3 py-2">{{ $item->nama_alat }}</td>
+                                <td class="px-3 py-2">{{ $item->stok }}</td>
+                                <td class="px-3 py-2">{{ $item->keterangan }}</td>
                 </tr>
                 @endforeach
             </tbody>

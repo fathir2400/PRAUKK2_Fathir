@@ -18,20 +18,19 @@
                 </ol>
             </nav>
         </div>
-
-        <div class="flex xl:my-auto right-content align-items-center">
-            <a href="{{ url('satuan/create') }}" class="ti-btn ti-btn-info-full shadow-lg px-4 py-2 rounded-md text-white">
-                <i class="fe fe-plus-circle"></i> Tambah Satuan
-            </a>
-        </div>
     </div>
 
     <!-- Start:: Tabel Satuan -->
     <div class="grid grid-cols-12 gap-6">
         <div class="xl:col-span-8 col-span-12">
             <div class="box custom-box shadow-lg rounded-md">
-                <div class="box-header flex justify-between">
+                <div class="box-header flex justify-between items-center p-4">
                     <h3 class="text-lg font-semibold text-gray-700">Daftar Satuan</h3>
+                    <a href="{{ route('satuan.invoice') }}" class="ti-btn ti-btn-secondary-full" style="padding: 2px 6px; font-size: 0.75rem;">
+    Invoice
+    <i class="fe fe-arrow-right rtl:rotate-180 ms-1 rtl:ms-0 align-middle"></i>
+</a>
+
                 </div>
                 <div class="table-responsive p-4">
                     <table class="table table-bordered table-striped">
@@ -53,16 +52,18 @@
                                 <td class="px-3 py-2">{{ $item->keterangan }}</td>
                                 <td class="px-3 py-2">
                                     <div class="flex gap-2">
-                                    <a href="javascript:void(0);" class="ti-btn ti-btn-sm ti-btn-success-full edit-btn" 
-   data-id="{{ $item->id_satuan }}" data-kode="{{ $item->kode_satuan }}" 
-   data-nama="{{ $item->nama }}" data-keterangan="{{ $item->keterangan }}">
-   <i class="ri-edit-line"></i>
-</a>
+                                        <a href="javascript:void(0);" class="ti-btn ti-btn-sm ti-btn-success-full edit-btn" 
+                                            data-id="{{ $item->id_satuan }}" 
+                                            data-kode="{{ $item->kode_satuan }}" 
+                                            data-nama="{{ $item->nama }}" 
+                                            data-keterangan="{{ $item->keterangan }}">
+                                            <i class="ri-edit-line"></i>
+                                        </a>
                                         <form action="{{ route('satuan.destroy', $item->id_satuan) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="ti-btn ti-btn-sm ti-btn-danger-full"
-                                                onclick="return confirm('Yakin ingin menghapus {{ $item->nama_satuan }}?')">
+                                                onclick="return confirm('Yakin ingin menghapus {{ $item->nama }}?')">
                                                 <i class="bi bi-trash"></i> 
                                             </button>
                                         </form>
@@ -163,6 +164,5 @@ document.addEventListener("DOMContentLoaded", function () {
     resetBtn.addEventListener('click', resetForm);
 });
 </script>
-
 
 @endsection

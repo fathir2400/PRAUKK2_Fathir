@@ -2,92 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Merk;
+use App\Models\merk;
 use Illuminate\Http\Request;
 
-class MerkController extends Controller
+class merkController extends Controller
 {
-    public function index(){
-        $merk = Merk::get();
+    public function index()
+    {
+        $merk = merk::paginate(10); // Menggunakan pagination agar lebih efisien
         return view('merk.index', compact('merk'));
-       }
-       public function create(){
-        $merk = Merk::all();
-       
-        return view('merk.create',[
-            'merk' => $merk,
-            
-        ]);
-        
     }
+
+    /**
+     * Menyimpan merk baru ke dalam database
+     */
     public function store(Request $request)
-{
-    // Validasi data yang dikirimkan oleh form
-    $request->validate([
-        'nama_merk' => 'required|string|max:255',
-       
-    ]);
-
-    // Hitung jumlah data di tabel merk untuk menentukan nomor berikutnya
-    $lastNumber = Merk::count('id_merk') + 1;
-
-    // Format kode merk (misalnya: KAT001, KAT002, dst.)
-    $kodemerk = 'MRK' . str_pad($lastNumber, 3, '0', STR_PAD_LEFT);
-
-    // Simpan data ke tabel merk
-    Merk::create([
-        'kode_merk' => $kodemerk,
-        'nama_merk' => $request->nama_merk,
-       
-    ]);
-
-    // Redirect ke halaman merk dengan pesan sukses
-    return redirect()->route('merk.index')->with('success', 'merk berhasil ditambahkan!');
-}
-public function edit($id)
     {
-        $merk = Merk::findOrFail($id);
-        return view('merk.update', compact('merk'));
-    }
-
-    // Menyimpan perubahan merk (update)
-    public function update(Request $request, $id)
-    {
-        // Validasi input
-        $request->validate([
-            'kode_merk' => 'required|string|max:255',
-            'nama_merk' => 'required|string|max:255',
+        merk::create([
+            'kode_merk' => $request->kode_merk,
+            'nama_merk' => $request->nama_merk, // Pastikan sesuai dengan database
            
         ]);
 
-        // Ambil data merk berdasarkan ID
-        $merk = Merk::findOrFail($id);
+        return redirect()->route('merk.index')->with('message', 'Data berhasil ditambahkan!');
+    }
 
-        // Update data merk
+    /**
+     * Mengambil data merk untuk edit berdasarkan ID
+     */
+    public function edit($id)
+    {
+        $merk = merk::findOrFail($id);
+        return response()->json($merk);
+    }
+
+    /**
+     * Memperbarui data merk berdasarkan ID
+     */
+    public function update(Request $request, $id)
+    {
+        $merk = merk::findOrFail($id);
+
         $merk->update([
             'kode_merk' => $request->kode_merk,
             'nama_merk' => $request->nama_merk,
            
         ]);
 
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('merk.index')->with('success', 'merk berhasil diperbarui!');
+        return redirect()->route('merk.index')->with('message', 'Data berhasil diperbarui!');
     }
 
-    // Menghapus merk
+    /**
+     * Menghapus data merk berdasarkan ID
+     */
     public function destroy($id)
     {
-        // Ambil data merk berdasarkan ID
-        $merk = Merk::findOrFail($id);
-
-        // Hapus merk
-        $merk->delete();
-
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('merk.index')->with('success', 'merk berhasil dihapus!');
+        merk::findOrFail($id)->delete();
+        return redirect()->route('merk.index')->with('message', 'Data berhasil dihapus!');
     }
-    public function show(Request $request){
-        $merk = Merk::get();      
-        return view('merk.invoice',compact('merk'));
-       }
+
+    /**
+     * Mengambil merk berdasarkan ID untuk API atau kebutuhan lain
+     */
+    public function getmerk($id)
+    {
+        $merk = merk::findOrFail($id);
+        return response()->json($merk);
+    }
+
+    /**
+     * Menampilkan daftar merk dalam bentuk invoice
+     */
+    public function show()
+    {
+        $merk = merk::paginate(10);
+        return view('merk.invoice', compact('merk'));
+    }
 }

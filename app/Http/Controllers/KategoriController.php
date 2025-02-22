@@ -7,87 +7,75 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    public function index(){
-        $kategori = Kategori::get();
-        return view('kategori.index', compact('kategori'));
-       }
-       public function create(){
-        $kategori = Kategori::all();
-       
-        return view('kategori.create',[
-            'kategori' => $kategori,
-            
-        ]);
-        
-    }
-    public function store(Request $request)
-{
-    // Validasi data yang dikirimkan oleh form
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'keterangan' => 'nullable|string|max:255',
-    ]);
-
-    // Hitung jumlah data di tabel kategori untuk menentukan nomor berikutnya
-    $lastNumber = Kategori::count('id_kategori') + 1;
-
-    // Format kode kategori (misalnya: KAT001, KAT002, dst.)
-    $kodeKategori = 'KTG' . str_pad($lastNumber, 3, '0', STR_PAD_LEFT);
-
-    // Simpan data ke tabel kategori
-    Kategori::create([
-        'kode_kategori' => $kodeKategori,
-        'nama' => $request->nama,
-        'keterangan' => $request->keterangan,
-    ]);
-
-    // Redirect ke halaman kategori dengan pesan sukses
-    return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan!');
-}
-public function edit($id)
+    public function index()
     {
-        $kategori = Kategori::findOrFail($id);
-        return view('kategori.update', compact('kategori'));
+        $kategori = kategori::paginate(10); // Menggunakan pagination agar lebih efisien
+        return view('kategori.index', compact('kategori'));
     }
 
-    // Menyimpan perubahan kategori (update)
+    /**
+     * Menyimpan kategori baru ke dalam database
+     */
+    public function store(Request $request)
+    {
+        kategori::create([
+            'kode_kategori' => $request->kode_kategori,
+            'nama' => $request->nama, // Pastikan sesuai dengan database
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('kategori.index')->with('message', 'Data berhasil ditambahkan!');
+    }
+
+    /**
+     * Mengambil data kategori untuk edit berdasarkan ID
+     */
+    public function edit($id)
+    {
+        $kategori = kategori::findOrFail($id);
+        return response()->json($kategori);
+    }
+
+    /**
+     * Memperbarui data kategori berdasarkan ID
+     */
     public function update(Request $request, $id)
     {
-        // Validasi input
-        $request->validate([
-            'kode_kategori' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
+        $kategori = kategori::findOrFail($id);
 
-        // Ambil data kategori berdasarkan ID
-        $kategori = Kategori::findOrFail($id);
-
-        // Update data kategori
         $kategori->update([
             'kode_kategori' => $request->kode_kategori,
             'nama' => $request->nama,
             'keterangan' => $request->keterangan,
         ]);
 
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diperbarui!');
+        return redirect()->route('kategori.index')->with('message', 'Data berhasil diperbarui!');
     }
 
-    // Menghapus kategori
+    /**
+     * Menghapus data kategori berdasarkan ID
+     */
     public function destroy($id)
     {
-        // Ambil data kategori berdasarkan ID
-        $kategori = Kategori::findOrFail($id);
-
-        // Hapus kategori
-        $kategori->delete();
-
-        // Redirect ke halaman index dengan pesan sukses
-        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil dihapus!');
+        kategori::findOrFail($id)->delete();
+        return redirect()->route('kategori.index')->with('message', 'Data berhasil dihapus!');
     }
-    public function show(Request $request){
-        $kategori = Kategori::get();      
-        return view('kategori.invoice',compact('kategori'));
-       }
+
+    /**
+     * Mengambil kategori berdasarkan ID untuk API atau kebutuhan lain
+     */
+    public function getkategori($id)
+    {
+        $kategori = kategori::findOrFail($id);
+        return response()->json($kategori);
+    }
+
+    /**
+     * Menampilkan daftar kategori dalam bentuk invoice
+     */
+    public function show()
+    {
+        $kategori = kategori::paginate(10);
+        return   view('kategori.invoice', compact('kategori'));
+    }
 }

@@ -33,17 +33,17 @@ $setting = DB::table('setting')->first();
             <thead>
                 <tr class="bg-gray-100 text-left">
                 <th scope="col" class="text-start">No</th>
-                                                <th scope="col" class="text-start">Kode satuan</th>
+                                                <th scope="col" class="text-start">Kode kategori</th>
                                                 <th scope="col" class="text-start">Nama</th>
                                                 <th scope="col" class="text-start">Keterangan</th>
                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($satuan as $key =>$item)
+                                        @foreach ($kategori as $key =>$item)
                                             <tr class="border-b border-defaultborder">
                                             <td>{{ $key + 1}}</td>
-                                            <td>{{ $item->kode_satuan }}</td>
+                                            <td>{{ $item->kode_kategori }}</td>
                                             <td>{{ $item->nama }}</td>  
                                             <td>{{ $item->keterangan }}</td>
                 </tr>
